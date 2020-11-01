@@ -24,8 +24,29 @@ public class Player {
   @JoinColumn(name = "user")
   private User user;
 
+  public Player() {
+
+  }
+
   public Player(String name, User user) {
+    super();
     this.name = name;
+    this.user = user;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
     this.user = user;
   }
 }

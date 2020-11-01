@@ -17,10 +17,23 @@ public class Card {
   @Column(name = "word")
   private String word;
 
+  public Card() {
+
+  }
+
   public Card(String word) {
+    super();
     this.word = word;
   }
   public long getCardid() {
     return this.id;
+  }
+
+  public String getWord() {
+    return word;
+  }
+
+  public void setWord(String word) {
+    this.word = word;
   }
 }
