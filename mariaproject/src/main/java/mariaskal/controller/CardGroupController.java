@@ -33,7 +33,7 @@ public class CardGroupController {
     //@RequestMapping(value = "/cardGroups", method = RequestMethod.GET)
     @GetMapping("cardGroups")
     public List<CardGroup> getCardGroups() {
-        return this.cardGroupRepository.findAll();
+        return this.cardGroupService.findAll();
     }
 
     // @GetMapping("cardGroup")

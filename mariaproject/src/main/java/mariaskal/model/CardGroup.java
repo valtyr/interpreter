@@ -9,17 +9,22 @@ import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.FetchType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.time.LocalDateTime;
 
-import java.util.TreeSet;
 
 @Entity
 @Table(name = "cardgroups")
@@ -28,8 +33,13 @@ public class CardGroup {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  @OneToMany(cascade = CascadeType.ALL)
-  @JoinColumn(name = "card")
+  //@ManyToMany(cascade = {CascadeType.ALL})
+  //@JoinColumn(name = "cardgroups_id")
+  @ManyToMany(cascade=CascadeType.REFRESH)
+  @JoinTable(
+    name = "card_group_mapping",
+    joinColumns = @JoinColumn(name = "cardgroups_id"),
+    inverseJoinColumns = @JoinColumn(name = "cards_id"))
   private List<Card> cards;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -50,7 +60,8 @@ public class CardGroup {
   private Long timesUsed;
   
   @Column(name = "tags")
-  private TreeSet<String> tags;
+  @ElementCollection(targetClass=String.class)
+  private Set<String> tags;
 
   @Column(name = "numberOfRatings")
   private Long numberOfRatings;
@@ -58,16 +69,15 @@ public class CardGroup {
   public CardGroup() {
   }
 
-  public CardGroup(ArrayList<Card> cards, String name, User creator, LocalDateTime creationDate, double rating, Long timesUsed,
-      TreeSet<String> tags) {
+  public CardGroup(ArrayList<Card> cards, String name, User creator, Set<String> tags) {
     super();
     this.cards = cards;
     this.name = name;
     this.creator = creator;
-    this.creationDate = creationDate;
-    this.rating = rating;
+    this.creationDate = LocalDateTime.now();
+    this.rating = 3.5;
     this.numberOfRatings = (long)0;
-    this.timesUsed = timesUsed;
+    this.timesUsed = (long)0;
     this.tags = tags;
   }
 
@@ -99,7 +109,7 @@ public class CardGroup {
     return this.timesUsed;
   }
   
-  public TreeSet<String> getTags() {
+  public Set<String> getTags() {
     return this.tags;
   }
 
@@ -127,6 +137,14 @@ public class CardGroup {
 
   public void setName(String name) { 
     this.name = name;
+  }
+
+  public double getRating() {
+    return rating;
+  }
+
+  public void setRating(double rating) {
+    this.rating = rating;
   }
 
 }

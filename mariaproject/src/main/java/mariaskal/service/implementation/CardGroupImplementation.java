@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class CardGroupServiceImplementation implements CardGroupService {
+public class CardGroupImplementation implements CardGroupService {
   
   CardGroupRepository repository;
 
   @Autowired
-  public CardGroupServiceImplementation(CardGroupRepository cardGroupRepository) {
+  public CardGroupImplementation(CardGroupRepository cardGroupRepository) {
     this.repository = cardGroupRepository;
   }
 

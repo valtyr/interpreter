@@ -2,10 +2,19 @@ package mariaskal.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+
+
 import javax.persistence.Id;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+
+
+
+
 
 @Entity
 @Table(name = "user")
@@ -13,24 +22,20 @@ public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
-  
-  @Column(name = "first_name")
-  private String firstName;
 
-  @Column(name = "last_name")
-  private String lastName;
+  @Column(name = "first_name")
+  private String name;
 
   @Column(name = "email")
   private String email;
 
-  public User () {
+  public User() {
 
   }
 
-  public User(String firstName, String lastName, String email) {
+  public User(String name, String email) {
     super();
-    this.firstName = firstName;
-    this.lastName = lastName;
+    this.name = name;
     this.email = email;
   }
   public long getId() {
@@ -39,17 +44,11 @@ public class User {
   public void setId(long id) {
     this.id = id;
   }
-  public String getFirstName() {
-    return firstName;
+  public String getName() {
+    return this.name;
   }
-  public void setFirstName(String firstName) {
-    this.firstName = firstName;
-  }
-  public String getLastName() {
-    return lastName;
-  }
-  public void SetLastName(String lastName) {
-    this.lastName = lastName;
+  public void setName(String name) {
+    this.name = name;
   }
   public String getEmail() {
     return email;

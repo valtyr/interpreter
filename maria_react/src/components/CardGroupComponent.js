@@ -46,9 +46,11 @@ const CardGroupComponent = () => {
 
 
   return (
+
     <div>
+      <h2>Card Groups</h2>
       {cardGroups.map((group) => (
-        <div key={group.id}>{group.name}</div>
+        <button key={group.id}>{group.name} Rating: <span>{group.rating}</span></button>
       ))}
     </div>
   );

@@ -1,10 +1,17 @@
 package mariaskal.model;
 
+import mariaskal.model.CardGroup;
+
+import java.util.List;
+import java.util.ArrayList;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 
 @Entity
@@ -17,6 +24,12 @@ public class Card {
   @Column(name = "word")
   private String word;
 
+  //@Column(name = "creator")
+  //private Player player;
+
+  @ManyToMany(cascade={CascadeType.REFRESH}, mappedBy = "cards")
+  List<CardGroup> cardGroups = new ArrayList<CardGroup>();
+
   public Card() {
 
   }
@@ -25,7 +38,7 @@ public class Card {
     super();
     this.word = word;
   }
-  public long getCardid() {
+  public long getId() {
     return this.id;
   }
 
@@ -35,5 +48,9 @@ public class Card {
 
   public void setWord(String word) {
     this.word = word;
+  }
+
+  public void addCardGroup(CardGroup cardGroup) {
+    this.cardGroups.add(cardGroup);
   }
 }

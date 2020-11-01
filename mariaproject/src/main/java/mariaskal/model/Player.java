@@ -24,6 +24,15 @@ public class Player {
   @JoinColumn(name = "user")
   private User user;
 
+  @Column(name = "score")
+  private int score;
+
+  /*
+  @OneToMany
+  @JoinColumn(name = "players.id")
+  private List<Card> cards;
+  */
+
   public Player() {
 
   }
@@ -32,6 +41,7 @@ public class Player {
     super();
     this.name = name;
     this.user = user;
+    this.score = 0;
   }
 
   public String getName() {
@@ -49,4 +59,12 @@ public class Player {
   public void setUser(User user) {
     this.user = user;
   }
+
+  public int getScore() {
+    return this.score;
+  }
+
+  public void addPoint() {
+    ++this.score;
+  	}
 }

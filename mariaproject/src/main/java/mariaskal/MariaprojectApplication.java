@@ -19,6 +19,7 @@ import mariaskal.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.TreeSet;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -51,26 +52,43 @@ public class MariaprojectApplication implements CommandLineRunner{
 	public void run(String... args) throws Exception {
 		
 		//user
-		User halli = new User("Halli","Halli123", "hallib@gmail.com");
+		User halli = new User("Halli Dabbi", "hallib@gmail.com");
+		User arni = new User("arni litli", "arni@gmail.com");
+		User valtyr = new User("valtyr", "valtyr@gmail.com");
+		User mani = new User("arni abi", "arni@gmail.com");
 		this.userRepository.save(halli);
-		this.userRepository.save(new User("arni","arni123", "arni@gmail.com"));
-		this.userRepository.save(new User("mani","mani123", "mani@gmail.com"));
+		this.userRepository.save(arni);
+		this.userRepository.save(valtyr);
+		this.userRepository.save(mani);
+
 
 		//card
-		this.cardRepository.save(new Card("maniapi"));
-		this.cardRepository.save(new Card("maniapi2"));
+		Card card1 = new Card("maniapi");
+		Card card2 = new Card("maniapi2");
+		this.cardRepository.save(card1);
+		this.cardRepository.save(card2);
+
 		ArrayList<Card> cards = new ArrayList<Card>();
-		cards.add(new Card("maniapi3"));
-		cards.add(new Card("maniapi4"));
+		cards.add(card1);
+		cards.add(card2);
 
 
 		//treeset
-		TreeSet<String> tags = new TreeSet<String>();
+		Set<String> tags = new TreeSet<String>();
 		tags.add("banjo");
-		CardGroup g = new CardGroup(cards,"Hallaspil",halli, LocalDateTime.now(), 0.0, (long)1, tags);
+		CardGroup g = new CardGroup(cards,"Hallaspil",halli, tags);
+		// card1.addCardGroup(g);
+		// card2.addCardGroup(g);
+		CardGroup b = new CardGroup(cards,"Vallaspil",valtyr, tags);
+		// card1.addCardGroup(b);
+		// card2.addCardGroup(b);
+
+		CardGroup c = new CardGroup(cards,"Vallaspil",arni, tags);
 
 		//cardGroup
-		this.cardGroupRepostiory.save(g);
+		this.cardGroupService.save(g);
+		this.cardGroupService.save(b);
+		this.cardGroupService.save(c);
 		//this.cardGroupService.save(g);
 	}
 

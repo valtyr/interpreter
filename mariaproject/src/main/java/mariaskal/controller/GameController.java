@@ -7,21 +7,20 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import mariaskal.model.User;
-import mariaskal.repository.UserRepository;
-import mariaskal.service.UserService;
-
-
+import mariaskal.model.Game;
+import mariaskal.repository.GameRepository;
+import mariaskal.service.GameService;
 
 @RestController
 @RequestMapping("api/")
-public class UserController {
+public class GameController {
+    @Autowired
+    private GameService gameRepository;
 
-  @Autowired
-  private UserRepository userService;
+    @GetMapping("games")
+    public List<Game> getGame() {
+        return this.gameRepository.findAll();
+    }
 
-  @GetMapping("users")
-  public List<User> getUsers() {
-    return this.userService.findAll();
-  }
+
 }
