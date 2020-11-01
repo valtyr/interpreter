@@ -8,16 +8,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import mariaskal.model.Card;
-import mariaskal.repository.CardRepository;
+import mariaskal.service.CardService;
 
 @RestController
 @RequestMapping("api/")
 public class CardController {
     @Autowired
-    private CardRepository cardRepository;
+    private CardService cardService;
 
     @GetMapping("cards")
     public List<Card> getCard() {
-        return this.cardRepository.findAll();
+        return this.cardService.findAll();
     }
 }

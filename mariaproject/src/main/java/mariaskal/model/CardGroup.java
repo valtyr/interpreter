@@ -81,6 +81,18 @@ public class CardGroup {
     this.tags = tags;
   }
 
+  public CardGroup(String name) {
+    this.name = name;
+    this.creationDate = LocalDateTime.now();
+    this.cards = new ArrayList<Card>();
+    this.rating = 3.5;
+    this.numberOfRatings = (long)0;
+    this.timesUsed = (long)0;
+    this.tags = new TreeSet<String>();
+    User defaultUser = new User("Jon Jonsson", "jj@jj.com");
+    this.creator = defaultUser;
+  }
+
   public String toString(){
     return "Card Group:\nNo. Cards: "+cards.size()+"+\nCreator: "+creator.toString()+"\nCreation Date: "+creationDate.toString()+"\nRating: "+Double.toString(rating)+"\n No. Ratings: "+Long.toString(numberOfRatings)+"\nTimes Used: "+Long.toString(timesUsed);
   }
