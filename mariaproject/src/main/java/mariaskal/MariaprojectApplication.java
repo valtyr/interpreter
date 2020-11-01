@@ -3,7 +3,11 @@ package mariaskal;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import mariaskal.model.Card;
 import mariaskal.model.CardGroup;
@@ -24,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
 @EnableJpaRepositories
 @SpringBootApplication
+@CrossOrigin(origins="*")
 public class MariaprojectApplication implements CommandLineRunner{
 
 	public static void main(String[] args) {
@@ -62,7 +67,7 @@ public class MariaprojectApplication implements CommandLineRunner{
 		//treeset
 		TreeSet<String> tags = new TreeSet<String>();
 		tags.add("banjo");
-		CardGroup g = new CardGroup(cards, halli, LocalDateTime.now(), 0.0, (long)1, tags);
+		CardGroup g = new CardGroup(cards,"Hallaspil",halli, LocalDateTime.now(), 0.0, (long)1, tags);
 
 		//cardGroup
 		this.cardGroupRepostiory.save(g);

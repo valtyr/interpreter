@@ -37,6 +37,9 @@ public class CardGroup {
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   private User creator;
 
+  @Column(name = "name")
+  private String name;
+
   @Column(name = "creationDate")
   private LocalDateTime creationDate;
 
@@ -55,10 +58,11 @@ public class CardGroup {
   public CardGroup() {
   }
 
-  public CardGroup(ArrayList<Card> cards, User creator, LocalDateTime creationDate, double rating, Long timesUsed,
+  public CardGroup(ArrayList<Card> cards, String name, User creator, LocalDateTime creationDate, double rating, Long timesUsed,
       TreeSet<String> tags) {
     super();
     this.cards = cards;
+    this.name = name;
     this.creator = creator;
     this.creationDate = creationDate;
     this.rating = rating;
@@ -66,9 +70,16 @@ public class CardGroup {
     this.timesUsed = timesUsed;
     this.tags = tags;
   }
+
   public String toString(){
     return "Card Group:\nNo. Cards: "+cards.size()+"+\nCreator: "+creator.toString()+"\nCreation Date: "+creationDate.toString()+"\nRating: "+Double.toString(rating)+"\n No. Ratings: "+Long.toString(numberOfRatings)+"\nTimes Used: "+Long.toString(timesUsed);
+  }
 
+  public long getId() {
+    return id;
+  }
+  public void setId(long id) {
+    this.id = id;
   }
 
 
@@ -108,6 +119,14 @@ public class CardGroup {
     this.numberOfRatings++;
     this.rating = (this.rating + rating) / this.numberOfRatings;
     return this.rating;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) { 
+    this.name = name;
   }
 
 }
