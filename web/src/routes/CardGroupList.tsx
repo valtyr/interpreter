@@ -6,6 +6,7 @@ import { Card } from "../store/types";
 import { useHistory } from "react-router-dom";
 import { items } from "../helpers";
 import { PlusOutlined } from "@ant-design/icons";
+import { addCardGroup } from "../api";
 
 const columns = [
   { title: "Name", dataIndex: "name", key: "name" },
@@ -46,7 +47,16 @@ const CardGroupList: FunctionComponent = () => {
     <>
       <PageHeader
         title="Card groups"
-        extra={<Button icon={<PlusOutlined />} shape="circle" />}
+        extra={
+          <Button
+            icon={<PlusOutlined />}
+            shape="circle"
+            onClick={async () => {
+              const res = await addCardGroup("BOB");
+              console.log(res);
+            }}
+          />
+        }
       />
       <Table
         columns={columns}

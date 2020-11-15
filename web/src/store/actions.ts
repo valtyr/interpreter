@@ -4,6 +4,8 @@ import { CardGroup } from "./types";
 export enum ActionTypes {
   FetchCardGroups = "FETCH_CARD_GROUPS",
   ReceiveCardGroups = "RECEIVE_CARD_GROUPS",
+  CreateCardGroup = "CREATE_CARD_GROUP",
+  CardGroupCreated = "CARD_GROUP_CREATED",
 }
 
 interface FetchCardGroupsAction {
@@ -15,6 +17,19 @@ interface ReceiveCardGroupsAction {
   payload: CardGroup[];
 }
 
-export type CardGroupActions = FetchCardGroupsAction | ReceiveCardGroupsAction;
+interface CreateCardGroupAction {
+  type: ActionTypes.CreateCardGroup;
+}
+
+interface CardGroupCreatedAction {
+  type: ActionTypes.CardGroupCreated;
+  payload: CardGroup;
+}
+
+export type CardGroupActions =
+  | FetchCardGroupsAction
+  | ReceiveCardGroupsAction
+  | CreateCardGroupAction
+  | CardGroupCreatedAction;
 
 export type Actions = CardGroupActions;
