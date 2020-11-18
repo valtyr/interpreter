@@ -1,0 +1,276 @@
+{
+  "$ref": "#/definitions/Actions",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Actions": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CardGroupActions"
+        },
+        {
+          "$ref": "#/definitions/DebugActions"
+        },
+        {
+          "$ref": "#/definitions/UserActions"
+        }
+      ]
+    },
+    "Card": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "word": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "word"
+      ],
+      "type": "object"
+    },
+    "CardGroup": {
+      "additionalProperties": false,
+      "properties": {
+        "cards": {
+          "items": {
+            "$ref": "#/definitions/Card"
+          },
+          "type": "array"
+        },
+        "creationDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "creator": {
+          "$ref": "#/definitions/User"
+        },
+        "id": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        },
+        "rating": {
+          "type": "number"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "timesUsed": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "cards",
+        "creator",
+        "creationDate",
+        "timesUsed",
+        "tags",
+        "rating"
+      ],
+      "type": "object"
+    },
+    "CardGroupActions": {
+      "anyOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "FETCH_CARD_GROUPS",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "payload": {
+              "items": {
+                "$ref": "#/definitions/CardGroup"
+              },
+              "type": "array"
+            },
+            "type": {
+              "const": "RECEIVE_CARD_GROUPS",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "payload"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "CREATE_CARD_GROUP",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "payload": {
+              "$ref": "#/definitions/CardGroup"
+            },
+            "type": {
+              "const": "CARD_GROUP_CREATED",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "payload"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "DebugActions": {
+      "anyOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "PING",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "PONG",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "CONNECT",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "CONNECTED",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "DISCONNECTED",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "User": {
+      "additionalProperties": false,
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "id": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "email"
+      ],
+      "type": "object"
+    },
+    "UserActions": {
+      "anyOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "payload": {
+              "type": "string"
+            },
+            "type": {
+              "const": "SET_USERNAME",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "payload"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "payload": {
+              "type": "string"
+            },
+            "type": {
+              "const": "USERNAME_SET",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "payload"
+          ],
+          "type": "object"
+        }
+      ]
+    }
+  }
+}
