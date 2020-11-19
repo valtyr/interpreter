@@ -83,26 +83,6 @@ const DebugWS = () => {
         subTitle="Message list"
       />
 
-      <Row gutter={10}>
-        <Col flex={1}>
-          <Input
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Username"
-          />
-        </Col>
-        <Col>
-          <Button
-            onClick={() =>
-              dispatch({ type: ActionTypes.SetUsername, payload: username })
-            }
-          >
-            Set username
-          </Button>
-        </Col>
-      </Row>
-      <Button onClick={() => dispatch({ type: ActionTypes.Ping })}>Ping</Button>
-
       <ActionEditor />
 
       <Table columns={columns} dataSource={events}></Table>

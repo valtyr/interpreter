@@ -1,0 +1,17 @@
+.root {
+  position: relative;
+  border-radius: 5px 5px 0 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+.button {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+.title {
+  padding: 15px 20px 10px 20px;
+  background-color: white;
+}
