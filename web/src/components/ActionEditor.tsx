@@ -14,8 +14,6 @@ const ActionEditor = () => {
   const [action, setAction] = useState(JSON.stringify({ type: "" }, null, 2));
   const [valid, setValid] = useState(false);
 
-  const jsonAction = JSON.parse(action);
-
   const dispatch = useTypedDispatch();
 
   return (
@@ -33,6 +31,7 @@ const ActionEditor = () => {
         editorWillMount={(monaco) => {
           monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
             validate: true,
+            enableSchemaRequest: false,
             schemas: [
               {
                 uri: "http://myserver/foo-schema.json",
@@ -43,12 +42,7 @@ const ActionEditor = () => {
           });
         }}
       />
-      <Button
-        onClick={() => dispatch(jsonAction)}
-        //disabled={!validate(jsonAction)}
-      >
-        Run action
-      </Button>
+      <Button>Run action</Button>
     </>
   );
 };
