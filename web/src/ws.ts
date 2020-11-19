@@ -3,8 +3,9 @@ import SockJS from "sockjs-client";
 
 export const connect = (): Promise<CompatClient> =>
   new Promise((resolve, reject) => {
-    const socket = new SockJS("http://localhost:8080/ws", undefined);
-    const stompClient = Stomp.over(socket);
+    const stompClient = Stomp.over(() => {
+      return new SockJS("http://localhost:8080/ws", undefined);
+    });
     try {
       stompClient.connect({}, (frame: string) => {
         console.log("Connected: " + frame);
