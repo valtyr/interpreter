@@ -13,4 +13,9 @@ public interface GameService {
     List<Game> findAll();
 
     List<Game> findByCreator(User creator);
+
+    Game findByShareId(String shareId);
+
+    Game findById(long id);
+
 }

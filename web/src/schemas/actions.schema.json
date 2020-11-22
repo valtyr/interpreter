@@ -12,6 +12,12 @@
         },
         {
           "$ref": "#/definitions/UserActions"
+        },
+        {
+          "$ref": "#/definitions/GameActions"
+        },
+        {
+          "$ref": "#/definitions/ErrorActions"
         }
       ]
     },
@@ -214,6 +220,280 @@
         }
       ]
     },
+    "ErrorActions": {
+      "additionalProperties": false,
+      "properties": {
+        "payload": {
+          "additionalProperties": false,
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "message"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "const": "ERROR_RECEIVED",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "payload"
+      ],
+      "type": "object"
+    },
+    "GameActions": {
+      "anyOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "payload": {
+              "type": "string"
+            },
+            "type": {
+              "const": "JOIN_GAME",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "payload"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "payload": {
+              "additionalProperties": false,
+              "properties": {
+                "gameState": {
+                  "$ref": "#/definitions/GameState"
+                },
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "gameState"
+              ],
+              "type": "object"
+            },
+            "type": {
+              "const": "GAME_JOINED",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "payload"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "CREATE_GAME",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "payload": {
+              "additionalProperties": false,
+              "properties": {
+                "gameState": {
+                  "$ref": "#/definitions/GameState"
+                },
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "gameState"
+              ],
+              "type": "object"
+            },
+            "type": {
+              "const": "GAME_CREATED",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "payload"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "payload": {
+              "additionalProperties": false,
+              "properties": {
+                "gameState": {
+                  "$ref": "#/definitions/GameState"
+                }
+              },
+              "required": [
+                "gameState"
+              ],
+              "type": "object"
+            },
+            "type": {
+              "const": "GAME_UPDATED",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "payload"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "payload": {
+              "type": "string"
+            },
+            "type": {
+              "const": "ADD_WORD",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "payload"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "payload": {
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "type": "object"
+            },
+            "type": {
+              "const": "DELETE_WORD",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "payload"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "GameState": {
+      "additionalProperties": false,
+      "properties": {
+        "cardGroup": {
+          "$ref": "#/definitions/CardGroup"
+        },
+        "creator": {
+          "$ref": "#/definitions/Player"
+        },
+        "currentCard": {
+          "$ref": "#/definitions/Card"
+        },
+        "currentPlayer": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Player"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "id": {
+          "type": "number"
+        },
+        "players": {
+          "items": {
+            "$ref": "#/definitions/Player"
+          },
+          "type": "array"
+        },
+        "shareId": {
+          "type": "string"
+        },
+        "winner": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Player"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "creator",
+        "players",
+        "winner",
+        "currentPlayer",
+        "currentCard",
+        "cardGroup",
+        "shareId"
+      ],
+      "type": "object"
+    },
+    "Player": {
+      "additionalProperties": false,
+      "properties": {
+        "connectionId": {
+          "type": "string"
+        },
+        "id": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        },
+        "score": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "connectionId",
+        "score"
+      ],
+      "type": "object"
+    },
     "User": {
       "additionalProperties": false,
       "properties": {
@@ -257,7 +537,20 @@
           "additionalProperties": false,
           "properties": {
             "payload": {
-              "type": "string"
+              "additionalProperties": false,
+              "properties": {
+                "player": {
+                  "$ref": "#/definitions/Player"
+                },
+                "username": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "username",
+                "player"
+              ],
+              "type": "object"
             },
             "type": {
               "const": "USERNAME_SET",

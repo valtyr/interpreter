@@ -10,6 +10,7 @@ import com.hugbo.mariaskal.service.GameService;
 import com.hugbo.mariaskal.repository.GameRepository;
 import com.hugbo.mariaskal.model.Game;
 import com.hugbo.mariaskal.model.User;
+import com.hugbo.mariaskal.model.Player;
 
 @Service
 public class GameImplementation implements GameService {
@@ -39,5 +40,15 @@ public class GameImplementation implements GameService {
   @Override
   public List<Game> findByCreator(User creator) {
     return repository.findByCreator(creator);
+  }
+
+  @Override
+  public Game findByShareId(String shareId) {
+    return repository.findByShareId(shareId);
+  }
+
+  @Override
+  public Game findById(long id) {
+    return repository.findById(id);
   }
 }

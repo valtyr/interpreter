@@ -3,12 +3,16 @@ package com.hugbo.mariaskal.model;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Table;
+import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 
 import java.util.UUID;
 
@@ -19,12 +23,13 @@ public class Player {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  @Column(name = "connectionID")
-  private UUID connectionID;
+  @Column(name = "connectionId")
+  private UUID connectionId;
 
   @Column(name = "name")
   private String name;
 
+  @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user")
   private User user;
@@ -32,26 +37,28 @@ public class Player {
   @Column(name = "score")
   private int score;
 
-  /*
-   * @OneToMany
-   * 
-   * @JoinColumn(name = "players.id") private List<Card> cards;
-   */
-
   public Player() {
 
   }
 
   public Player(String name, UUID uuid) {
     this.name = name;
-    this.connectionID = uuid;
+    this.connectionId = uuid;
   }
 
   public Player(String name, UUID uuid, User user) {
     this.name = name;
-    this.connectionID = uuid;
+    this.connectionId = uuid;
     this.user = user;
     this.score = 0;
+  }
+
+  public UUID getConnectionId() {
+    return this.connectionId;
+  }
+
+  public long getId() {
+    return this.id;
   }
 
   public String getName() {
@@ -77,4 +84,5 @@ public class Player {
   public void addPoint() {
     ++this.score;
   }
+
 }

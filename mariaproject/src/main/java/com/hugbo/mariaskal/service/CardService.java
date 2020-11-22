@@ -13,5 +13,7 @@ public interface CardService {
 
     void delete(Card card);
 
+    Card findById(long id);
+
     List<Card> findAll();
 }

@@ -6,12 +6,15 @@ import { Actions } from "./actions";
 import { cardGroups } from "./reducers/cardGroups";
 import { debug } from "./reducers/debug";
 import { user } from "./reducers/user";
+import { game } from "./reducers/game";
+import { errors } from "./reducers/errors";
+import notificationMiddleware from "./notificationMiddleware";
 
-const rootReducer = combineReducers({ cardGroups, debug, user });
+const rootReducer = combineReducers({ cardGroups, debug, user, game, errors });
 
 export const store = configureStore({
   reducer: rootReducer,
-  middleware: [wsMiddleware],
+  middleware: [wsMiddleware, notificationMiddleware],
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

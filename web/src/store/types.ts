@@ -19,3 +19,27 @@ export interface CardGroup {
   tags: string[];
   rating: number;
 }
+
+export interface Player {
+  id: number;
+
+  name: string;
+  connectionId: string;
+
+  score: number;
+}
+
+export interface GameState {
+  id: number;
+
+  creator: Player;
+  players: Player[];
+
+  winner: Player | null;
+  currentPlayer: Player | null;
+
+  currentCard: Card;
+  cardGroup: CardGroup;
+
+  shareId: string;
+}

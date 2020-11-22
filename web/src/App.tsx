@@ -13,23 +13,16 @@ import { Layout } from "antd";
 import DebugWS from "./routes/DebugWS";
 import { ActionTypes } from "./store/actions";
 import DebugButton from "./components/DebugButton";
+import Play from "./routes/Play";
 
 const { Header, Content, Footer } = Layout;
 
 const history = createBrowserHistory();
 
 function App() {
-  const cardGroups = useTypedSelector((state) => state.cardGroups);
-  // useEffect(() => {
-  //   fetchCardGroups();
-  // }, []);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const client = await connect();
-  //     client.send("/app/ping");
-  //   })();
-  // }, []);
+  useEffect(() => {
+    fetchCardGroups();
+  }, []);
 
   const dispatch = useTypedDispatch();
   useEffect(() => {
@@ -45,6 +38,10 @@ function App() {
           <Switch>
             <Route path="/debug">
               <DebugWS />
+            </Route>
+
+            <Route path="/play">
+              <Play />
             </Route>
 
             <Route path="/cardgroup/:id">

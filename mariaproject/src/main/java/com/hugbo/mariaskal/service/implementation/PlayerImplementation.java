@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class PlayerImplementation implements PlayerService {
@@ -31,6 +32,11 @@ public class PlayerImplementation implements PlayerService {
   }
 
   @Override
+  public Player findByConnectionId(UUID connectionId) {
+    return repository.findByConnectionId(connectionId);
+  }
+
+  @Override
   public List<Player> findAll() {
     return repository.findAll();
   }
@@ -43,5 +49,11 @@ public class PlayerImplementation implements PlayerService {
   @Override
   public List<Player> findByUser(User user) {
     return repository.findByUser(user);
+  }
+
+  @Override
+  public Player createPlayerFromConnectionId(UUID connectionId, String username) {
+    Player player = new Player(username, connectionId);
+    return repository.save(player);
   }
 }

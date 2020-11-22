@@ -11,13 +11,23 @@ import javax.persistence.OneToOne;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.hugbo.mariaskal.helpers.RandomID;
+import com.hugbo.mariaskal.service.CardGroupService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Entity
 @Table(name = "games")
@@ -26,15 +36,17 @@ public class Game {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
+  @JsonIgnore
   @Column(name = "elapsedTime")
   private Long elapsedTime;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "creator")
-  private User creator;
+  private Player creator;
 
-  @OneToMany(cascade = CascadeType.ALL)
+  @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
   @JoinColumn(name = "playerList")
+  @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
   private List<Player> playerList;
 
   @OneToOne(fetch = FetchType.LAZY)
@@ -52,9 +64,12 @@ public class Game {
   @JoinColumn(name = "currentCard")
   private Card currentCard;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "cardGroup")
   private CardGroup cardGroup;
+
+  @Column(name = "shareId", unique = true)
+  private String shareId;
 
   // @Transient
   // private Player explainer;
@@ -63,13 +78,18 @@ public class Game {
   // private Player guesser;
 
   public Game() {
+    this.shareId = RandomID.generate();
   }
 
-  public Game(User creator) {
+  public Game(Player creator) {
+    this.shareId = RandomID.generate();
     this.creator = creator;
+    this.playerList = new ArrayList<Player>();
+    this.playerList.add(creator);
+    this.cardGroup = new CardGroup();
   }
 
-  public Game(User creator, List<Player> playerList, CardGroup cardGroup) {
+  public Game(Player creator, List<Player> playerList, CardGroup cardGroup) {
     this.creator = creator;
     this.playerList = playerList;
     this.cardGroup = cardGroup;
@@ -86,11 +106,19 @@ public class Game {
    * }
    */
 
+  public String getShareId() {
+    return this.shareId;
+  }
+
   public long getId() {
     return id;
   }
 
   // public Player getWinner(
+
+  public void addPlayer(Player player) {
+    playerList.add(player);
+  }
 
   public void setWinner(Player winner) {
     this.winner = winner;
@@ -126,6 +154,10 @@ public class Game {
 
   public void setCardGroup(CardGroup cardGroup) {
     this.cardGroup = cardGroup;
+  }
+
+  public List<Player> getPlayerList() {
+    return this.playerList;
   }
 
 }

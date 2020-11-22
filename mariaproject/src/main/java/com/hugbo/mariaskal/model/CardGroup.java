@@ -20,6 +20,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.FetchType;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -34,9 +35,10 @@ public class CardGroup {
 
   // @ManyToMany(cascade = {CascadeType.ALL})
   // @JoinColumn(name = "cardgroups_id")
-  @ManyToMany(cascade = CascadeType.REFRESH)
-  @JoinTable(name = "card_group_mapping", joinColumns = @JoinColumn(name = "cardgroups_id"), inverseJoinColumns = @JoinColumn(name = "cards_id"))
-  private List<Card> cards;
+  @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+  @JoinColumn(name = "cards")
+  @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+  private Set<Card> cards;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "creator")
@@ -63,9 +65,10 @@ public class CardGroup {
   private Long numberOfRatings;
 
   public CardGroup() {
+    this.cards = new HashSet<Card>();
   }
 
-  public CardGroup(ArrayList<Card> cards, String name, User creator, Set<String> tags) {
+  public CardGroup(HashSet<Card> cards, String name, User creator, Set<String> tags) {
     this.cards = cards;
     this.name = name;
     this.creator = creator;
@@ -79,7 +82,7 @@ public class CardGroup {
   public CardGroup(String name) {
     this.name = name;
     this.creationDate = LocalDateTime.now();
-    this.cards = new ArrayList<Card>();
+    this.cards = new HashSet<Card>();
     this.rating = 0;
     this.numberOfRatings = (long) 0;
     this.timesUsed = (long) 0;
@@ -102,7 +105,7 @@ public class CardGroup {
     this.id = id;
   }
 
-  public List<Card> getCards() {
+  public Set<Card> getCards() {
     return this.cards;
   }
 

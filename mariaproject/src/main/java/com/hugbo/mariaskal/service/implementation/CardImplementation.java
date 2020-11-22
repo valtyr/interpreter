@@ -34,6 +34,11 @@ public class CardImplementation implements CardService {
   }
 
   @Override
+  public Card findById(long id) {
+    return repository.findById(id);
+  }
+
+  @Override
   public List<Card> findAll() {
     return repository.findAll();
   }

@@ -16,7 +16,11 @@ public interface GameRepository extends JpaRepository<Game, Long> {
 
   void delete(Game game);
 
+  Game findById(long id);
+
   List<Game> findAll();
 
   List<Game> findByCreator(User creator);
+
+  Game findByShareId(String shareId);
 }

@@ -55,7 +55,7 @@ const mockState: CardGroupState = {
   },
 };
 
-export const cardGroups = (state = mockState, action: CardGroupActions) => {
+export const cardGroups = (state = initialState, action: CardGroupActions) => {
   switch (action.type) {
     case ActionTypes.FetchCardGroups:
       return { ...state, loading: true };

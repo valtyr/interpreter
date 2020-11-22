@@ -19,6 +19,7 @@ import com.hugbo.mariaskal.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -67,7 +68,7 @@ public class MariaprojectApplication implements CommandLineRunner {
 		this.cardRepository.save(card1);
 		this.cardRepository.save(card2);
 
-		ArrayList<Card> cards = new ArrayList<Card>();
+		HashSet<Card> cards = new HashSet<Card>();
 		cards.add(card1);
 		cards.add(card2);
 

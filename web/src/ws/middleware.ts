@@ -40,6 +40,10 @@ const socketMiddleware = (): Middleware<{}, RootState> => {
       }
       case ActionTypes.SetUsername:
       case ActionTypes.Ping:
+      case ActionTypes.JoinGame:
+      case ActionTypes.CreateGame:
+      case ActionTypes.AddWord:
+      case ActionTypes.DeleteWord:
         sendMessage(action);
         break;
       default:

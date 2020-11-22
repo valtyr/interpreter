@@ -3,12 +3,16 @@ package com.hugbo.mariaskal.model;
 import com.hugbo.mariaskal.model.CardGroup;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.ArrayList;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.CascadeType;
@@ -24,11 +28,9 @@ public class Card {
   @Column(name = "word")
   private String word;
 
-  // @Column(name = "creator")
-  // private Player player;
-
-  @ManyToMany(cascade = { CascadeType.REFRESH }, mappedBy = "cards")
-  List<CardGroup> cardGroups = new ArrayList<CardGroup>();
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "creator")
+  private Player player;
 
   public Card() {
 
@@ -36,6 +38,11 @@ public class Card {
 
   public Card(String word) {
     this.word = word;
+  }
+
+  public Card(String word, Player player) {
+    this.word = word;
+    this.player = player;
   }
 
   public long getId() {
@@ -50,7 +57,10 @@ public class Card {
     this.word = word;
   }
 
-  public void addCardGroup(CardGroup cardGroup) {
-    this.cardGroups.add(cardGroup);
+  public UUID getCreatorId() {
+    if (player == null) {
+      return null;
+    }
+    return this.player.getConnectionId();
   }
 }
