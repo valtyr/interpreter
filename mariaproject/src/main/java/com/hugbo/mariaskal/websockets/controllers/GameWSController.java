@@ -2,14 +2,18 @@ package com.hugbo.mariaskal.websockets.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
+import org.springframework.messaging.simp.user.SimpUser;
+import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Controller;
 
 import com.hugbo.mariaskal.messages.Message;
@@ -25,6 +29,9 @@ public class GameWSController {
 
   Logger logger = LoggerFactory.getLogger(GameWSController.class);
 
+  @Autowired
+  SimpUserRegistry simpUserRegistry;
+
   public GameWSController(SimpMessagingTemplate simpMessagingTemplate) {
     this.simpMessagingTemplate = simpMessagingTemplate;
     this.activeGames = new ArrayList<>();
@@ -33,6 +40,7 @@ public class GameWSController {
   @MessageMapping("/message")
   public void message(Message m, StompPrincipal principal) throws Exception {
     logger.info("Received message of type: " + m.type.toString());
+
     switch (m.type) {
       case PING -> {
         simpMessagingTemplate.convertAndSendToUser(principal.getName(), "/topic/messages",
@@ -43,6 +51,7 @@ public class GameWSController {
         principal.setUsername(username);
         simpMessagingTemplate.convertAndSendToUser(principal.getName(), "/topic/messages",
             new Message(MessageType.USERNAME_SET, username));
+
       }
       default -> {
         logger.warn("Unhandled message: " + m.type.toString());

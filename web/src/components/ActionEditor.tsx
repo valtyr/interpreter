@@ -21,7 +21,9 @@ const parseJSON = (data: string) => {
 
 const ActionEditor = () => {
   const monaco = useRef<MonacoEditor | null>(null);
-  const [action, setAction] = useState(JSON.stringify({ type: "" }, null, 2));
+  const [action, setAction] = useState(
+    JSON.stringify({ type: "PING" }, null, 2)
+  );
   const [valid, setValid] = useState(false);
 
   const data = parseJSON(action);
@@ -31,11 +33,15 @@ const ActionEditor = () => {
   return (
     <div className={styles.root}>
       <div className={styles.title}>
-        <Typography.Title level={5}>Actions</Typography.Title>
+        <Typography.Title level={5}>Run an action</Typography.Title>
+
+        <Typography.Paragraph>
+          Press <code>CTRL + SPACE</code> for autosuggestions.
+        </Typography.Paragraph>
       </div>
       <MonacoEditor
         key="editor"
-        height="150"
+        height="300"
         language="json"
         value={action}
         ref={monaco}
