@@ -1,8 +1,12 @@
-# Getting Started with Create React App
+## Hvernig skal bæta við actionum react megin...
+
+Bætið við action type í `store/actions.ts`. Búið svo til interface fyrir action og bætið því við typedef fyrir flokkinn.
+
+Ef actionið á að sendast upp á serverinn þarf að bæta við case í `ws/middleware.ts`. Ef action á að breyta state-inu react megin þarf að bregðast við því í viðeigandi reducer.
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
 
 In the project directory, you can run:
 
