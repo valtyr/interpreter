@@ -22,5 +22,7 @@ public interface PlayerService {
 
   List<Player> findByName(String name);
 
+  Player findById(Long id);
+
   List<Player> findByUser(User user);
 }

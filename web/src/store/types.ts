@@ -7,6 +7,7 @@ export interface User {
 export interface Card {
   id: number;
   word: string;
+  creatorId?: string | null;
 }
 
 export interface CardGroup {
@@ -18,6 +19,7 @@ export interface CardGroup {
   timesUsed: number;
   tags: string[];
   rating: number;
+  published?: boolean;
 }
 
 export interface Player {
@@ -32,14 +34,23 @@ export interface Player {
 export interface GameState {
   id: number;
 
+  gameOver: boolean;
+  gameStartedTime: string;
+  turnStartedTime: string;
+  turnInProgress: boolean;
+
+  currentRound: number | null;
+
   creator: Player;
-  players: Player[];
+  playerList: Player[];
 
   winner: Player | null;
   currentPlayer: Player | null;
+  currentGuesser: Player | null;
 
   currentCard: Card;
   cardGroup: CardGroup;
+  cardSequence: number[];
 
   shareId: string;
 }

@@ -12,26 +12,23 @@ import {
   Table,
 } from "antd";
 import { CloseOutlined, EditOutlined } from "@ant-design/icons";
-import React, { FunctionComponent, useState } from "react";
+import React, { FunctionComponent, useEffect, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useTypedSelector } from "../store";
+import { fetchCardGroups } from "../api";
 
-const columns = [
-  { title: "Word", dataIndex: "word", key: "word" },
-  {
-    title: "Actions",
-    dataIndex: "id",
-    key: "actions",
-    render: () => <div>test</div>,
-  },
-];
+const columns = [{ title: "Word", dataIndex: "word", key: "word" }];
 
 const CardGroup: FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
   const history = useHistory();
 
+  useEffect(() => {
+    fetchCardGroups();
+  }, []);
+
   const data = useTypedSelector((state) => state.cardGroups);
-  const cardGroup = data.cardGroupsById[id];
+  const cardGroup = data.cardGroups.find((cg) => cg.id === Number(id));
 
   const [editMode, setEditMode] = useState(false);
 
@@ -90,14 +87,17 @@ const CardGroup: FunctionComponent = () => {
           <Col lg={6} md={12} sm={24} xs={24}>
             <Statistic
               title="Date created"
-              value={cardGroup.creationDate.toLocaleString(undefined, {
-                day: "numeric",
-                month: "numeric",
-                year: "numeric",
-                hour12: false,
-                hour: "numeric",
-                minute: "2-digit",
-              })}
+              value={new Date(cardGroup.creationDate).toLocaleString(
+                undefined,
+                {
+                  day: "numeric",
+                  month: "numeric",
+                  year: "numeric",
+                  hour12: false,
+                  hour: "numeric",
+                  minute: "2-digit",
+                }
+              )}
             />
           </Col>
           <Col lg={8} md={12} sm={24} xs={24}>

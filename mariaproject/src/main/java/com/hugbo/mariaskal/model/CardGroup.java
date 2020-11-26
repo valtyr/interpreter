@@ -4,6 +4,10 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.hugbo.mariaskal.helpers.ISOTimestamp;
+
+import java.util.LinkedHashSet;
 
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
@@ -21,8 +25,10 @@ import javax.persistence.OneToOne;
 import javax.persistence.FetchType;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Collections;
 import java.util.TreeSet;
 import java.time.LocalDateTime;
 
@@ -43,13 +49,13 @@ public class CardGroup {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "creator")
   @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-  private User creator;
+  private Player creator;
 
   @Column(name = "name")
   private String name;
 
   @Column(name = "creationDate")
-  private LocalDateTime creationDate;
+  private String creationDate;
 
   @Column(name = "rating")
   private double rating;
@@ -64,31 +70,45 @@ public class CardGroup {
   @Column(name = "numberOfRatings")
   private Long numberOfRatings;
 
+  @JsonInclude
+  @Column(name = "published")
+  private boolean published;
+
   public CardGroup() {
-    this.cards = new HashSet<Card>();
+    this.cards = new LinkedHashSet<Card>();
+    this.timesUsed = (long) 0;
   }
 
-  public CardGroup(HashSet<Card> cards, String name, User creator, Set<String> tags) {
+  public CardGroup(LinkedHashSet<Card> cards, String name, Player creator, Set<String> tags) {
     this.cards = cards;
     this.name = name;
     this.creator = creator;
-    this.creationDate = LocalDateTime.now();
+    this.creationDate = ISOTimestamp.getISOTimestamp();
     this.rating = 3.5;
     this.numberOfRatings = (long) 0;
     this.timesUsed = (long) 0;
     this.tags = tags;
+    this.published = false;
   }
 
   public CardGroup(String name) {
     this.name = name;
-    this.creationDate = LocalDateTime.now();
-    this.cards = new HashSet<Card>();
+    this.creationDate = ISOTimestamp.getISOTimestamp();
+    this.cards = new LinkedHashSet<Card>();
     this.rating = 0;
     this.numberOfRatings = (long) 0;
     this.timesUsed = (long) 0;
     this.tags = new TreeSet<String>();
+    this.published = false;
     // User defaultUser = new User("Jon Jonsson", "jj@jj.com");
     // this.creator = defaultUser;
+  }
+
+  public void shuffleCards() {
+    ArrayList<Card> cardList = new ArrayList<Card>();
+    cardList.addAll(this.cards);
+    Collections.shuffle(cardList);
+    this.cards = new LinkedHashSet<Card>(cardList);
   }
 
   public String toString() {
@@ -109,11 +129,15 @@ public class CardGroup {
     return this.cards;
   }
 
-  public User getCreator() {
+  public void setDateTime(String creationDate) {
+    this.creationDate = creationDate;
+  }
+
+  public Player getCreator() {
     return this.creator;
   }
 
-  public LocalDateTime getCreationDate() {
+  public String getCreationDate() {
     return this.creationDate;
   }
 
@@ -157,6 +181,30 @@ public class CardGroup {
 
   public void setRating(double rating) {
     this.rating = rating;
+  }
+
+  public void setPublished(boolean published) {
+    this.published = published;
+  }
+
+  public boolean getPublished() {
+    return this.published;
+  }
+
+  public void setTags(LinkedHashSet<String> tags) {
+    this.tags = tags;
+  }
+
+  public void setCreator(Player creator) {
+    this.creator = creator;
+  }
+
+  public void incrementTimesUsed() {
+    this.timesUsed++;
+  }
+
+  public void setCreationDate(String creationDate) {
+    this.creationDate = creationDate;
   }
 
 }

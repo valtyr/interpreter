@@ -16,11 +16,20 @@ export enum ActionTypes {
   JoinGame = "JOIN_GAME",
   GameJoined = "GAME_JOINED",
   CreateGame = "CREATE_GAME",
+  StartGame = "START_GAME",
+  StartRound = "START_ROUND",
+  StartTurn = "START_TURN",
+  EndTurn = "END_TURN",
+  Correct = "CORRECT",
+  Skip = "SKIP",
+  PublishCardgroup = "PUBLISH_CARDGROUP",
   GameCreated = "GAME_CREATED",
   GameUpdated = "GAME_UPDATED",
   AddWord = "ADD_WORD",
   DeleteWord = "DELETE_WORD",
   ErrorRecieved = "ERROR_RECEIVED",
+  ConfettiOn = "CONFETTI_ON",
+  ConfettiOff = "CONFETTI_OFF",
 }
 
 // Card group actions
@@ -85,6 +94,30 @@ interface CreateGameAction {
   type: ActionTypes.CreateGame;
 }
 
+interface StartGameAction {
+  type: ActionTypes.StartGame;
+}
+
+interface StartRoundAction {
+  type: ActionTypes.StartRound;
+}
+
+interface StartTurnAction {
+  type: ActionTypes.StartTurn;
+}
+
+interface EndTurnAction {
+  type: ActionTypes.EndTurn;
+}
+
+interface CorrectAction {
+  type: ActionTypes.Correct;
+}
+
+interface SkipAction {
+  type: ActionTypes.Skip;
+}
+
 interface GameCreatedAction {
   type: ActionTypes.GameCreated;
   payload: {
@@ -112,14 +145,30 @@ interface DeleteWordAction {
   };
 }
 
+interface PublishCardGroupAction {
+  type: ActionTypes.PublishCardgroup;
+  payload: {
+    name: string;
+    tags: string[];
+  };
+}
+
 export type GameActions =
   | JoinGameAction
   | GameJoinedAction
   | CreateGameAction
+  | StartGameAction
+  | StartTurnAction
+  | StartRoundAction
+  | EndTurnAction
+  | CorrectAction
+  | SkipAction
   | GameCreatedAction
   | GameUpdatedAction
   | AddWordAction
-  | DeleteWordAction;
+  | DeleteWordAction
+  | StartRoundAction
+  | PublishCardGroupAction;
 
 // Errors Actions
 
@@ -132,6 +181,18 @@ interface ErrorRecievedAction {
 }
 
 export type ErrorActions = ErrorRecievedAction;
+
+// Config actions
+
+interface ConfettiOnAction {
+  type: ActionTypes.ConfettiOn;
+}
+
+interface ConfettiOffAction {
+  type: ActionTypes.ConfettiOff;
+}
+
+export type ConfigActions = ConfettiOnAction | ConfettiOffAction;
 
 // Debug Actions
 
@@ -167,4 +228,5 @@ export type Actions =
   | DebugActions
   | UserActions
   | GameActions
-  | ErrorActions;
+  | ErrorActions
+  | ConfigActions;

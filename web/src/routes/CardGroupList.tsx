@@ -1,12 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, PageHeader, Rate, Table, Tag } from "antd";
 import { FunctionComponent } from "react";
 import { useTypedSelector } from "../store";
 import { Card } from "../store/types";
 import { useHistory } from "react-router-dom";
 import { items } from "../helpers";
-import { PlusOutlined } from "@ant-design/icons";
-import { addCardGroup } from "../api";
+import { fetchCardGroups } from "../api";
 
 const columns = [
   { title: "Name", dataIndex: "name", key: "name" },
@@ -43,25 +42,17 @@ const CardGroupList: FunctionComponent = () => {
   const data = useTypedSelector((state) => state.cardGroups);
   const history = useHistory();
 
+  useEffect(() => {
+    fetchCardGroups();
+  }, []);
+
   return (
     <>
-      <PageHeader
-        title="Card groups"
-        extra={
-          <Button
-            icon={<PlusOutlined />}
-            shape="circle"
-            onClick={async () => {
-              const res = await addCardGroup("BOB");
-              console.log(res);
-            }}
-          />
-        }
-      />
+      <PageHeader title="Card groups" />
       <Table
         columns={columns}
         size="large"
-        dataSource={items(data.cardGroupsById)}
+        dataSource={data.cardGroups.filter((c) => c.published)}
         loading={data.loading}
         onRow={(item) => ({
           onClick: () => history.push(`/cardgroup/${item.id}`),

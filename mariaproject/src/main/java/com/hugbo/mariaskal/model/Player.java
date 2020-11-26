@@ -44,6 +44,7 @@ public class Player {
   public Player(String name, UUID uuid) {
     this.name = name;
     this.connectionId = uuid;
+    this.score = 0;
   }
 
   public Player(String name, UUID uuid, User user) {
@@ -81,8 +82,8 @@ public class Player {
     return this.score;
   }
 
-  public void addPoint() {
-    ++this.score;
+  public void addPoints(int points) {
+    this.score += points;
   }
 
 }

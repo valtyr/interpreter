@@ -18,12 +18,21 @@
         },
         {
           "$ref": "#/definitions/ErrorActions"
+        },
+        {
+          "$ref": "#/definitions/ConfigActions"
         }
       ]
     },
     "Card": {
       "additionalProperties": false,
       "properties": {
+        "creatorId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "id": {
           "type": "number"
         },
@@ -146,6 +155,36 @@
           "required": [
             "type",
             "payload"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "ConfigActions": {
+      "anyOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "CONFETTI_ON",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "CONFETTI_OFF",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
           ],
           "type": "object"
         }
@@ -315,6 +354,71 @@
         {
           "additionalProperties": false,
           "properties": {
+            "type": {
+              "const": "START_GAME",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "START_TURN",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "END_TURN",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "CORRECT",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "SKIP",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
             "payload": {
               "additionalProperties": false,
               "properties": {
@@ -410,6 +514,19 @@
             "payload"
           ],
           "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "START_ROUND",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
         }
       ]
     },
@@ -438,7 +555,7 @@
         "id": {
           "type": "number"
         },
-        "players": {
+        "playerList": {
           "items": {
             "$ref": "#/definitions/Player"
           },
@@ -461,7 +578,7 @@
       "required": [
         "id",
         "creator",
-        "players",
+        "playerList",
         "winner",
         "currentPlayer",
         "currentCard",

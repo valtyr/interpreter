@@ -44,6 +44,13 @@ const socketMiddleware = (): Middleware<{}, RootState> => {
       case ActionTypes.CreateGame:
       case ActionTypes.AddWord:
       case ActionTypes.DeleteWord:
+      case ActionTypes.StartGame:
+      case ActionTypes.StartRound:
+      case ActionTypes.StartTurn:
+      case ActionTypes.EndTurn:
+      case ActionTypes.Correct:
+      case ActionTypes.Skip:
+      case ActionTypes.PublishCardgroup:
         sendMessage(action);
         break;
       default:

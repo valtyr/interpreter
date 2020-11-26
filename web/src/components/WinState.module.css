@@ -1,0 +1,27 @@
+.root {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  margin-top: 50px;
+  margin-bottom: 75px;
+}
+
+.placing {
+  text-align: center;
+}
+
+.crown {
+  font-size: 40px;
+  color: gold;
+  margin-bottom: 5px;
+}
+
+.description {
+  text-transform: uppercase;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.name {
+  font-size: 25px;
+}

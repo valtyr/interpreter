@@ -56,4 +56,9 @@ public class PlayerImplementation implements PlayerService {
     Player player = new Player(username, connectionId);
     return repository.save(player);
   }
+
+  @Override
+  public Player findById(Long id) {
+    return repository.findById(id).get();
+  };
 }

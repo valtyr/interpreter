@@ -1,10 +1,14 @@
 package com.hugbo.mariaskal.websockets.controllers;
 
+import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.UUID;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +21,7 @@ import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hugbo.mariaskal.helpers.ISOTimestamp;
 import com.hugbo.mariaskal.messages.Message;
 import com.hugbo.mariaskal.messages.MessageType;
 import com.hugbo.mariaskal.messages.payloads.ErrorReceivedPayload;
@@ -68,7 +73,29 @@ public class GameWSController {
     return playerService.findByConnectionId(userId);
   }
 
-  // private Game getGame
+  private void turnOver(Game game) {
+    int sequenceSize = game.getPlayerSequence().size();
+    int idx = (game.getCurrentPlayerIdx() + 1) % sequenceSize;
+    game.setCurrentPlayerIdx(idx);
+    long playerId = game.getPlayerSequence().get(idx);
+    long guesserId = game.getPlayerSequence().get((idx + 1) % sequenceSize);
+    game.setCurrentPlayer(playerService.findById(playerId));
+    game.setCurrentGuesser(playerService.findById(guesserId));
+
+    game.setTurnInProgress(false);
+
+    if (game.getCardSequence().size() == 0) {
+      int round = game.getCurrentRound();
+      if (round == 4) {
+        game.setGameOver(true);
+
+        // Player winner = game.getPlayerList().stream().mapToInt(p ->
+        // p.getScore()).max()
+        // .orElseThrow(NoSuchElementException::new);
+      }
+      game.setCurrentRound(round + 1);
+    }
+  }
 
   @MessageMapping("/message")
   public void message(Message m, StompPrincipal principal) throws Exception {
@@ -90,7 +117,6 @@ public class GameWSController {
         playerService.save(newPlayer);
 
         UsernameSetPayload payload = new UsernameSetPayload(username, newPlayer);
-
         simpMessagingTemplate.convertAndSendToUser(principal.getName(), "/topic/messages",
             new Message(MessageType.USERNAME_SET, payload));
       }
@@ -210,7 +236,171 @@ public class GameWSController {
         simpMessagingTemplate.convertAndSend("/topic/messages",
             new Message(MessageType.GAME_UPDATED, gameUpdatedPayload));
       }
-      // case START_GAME -> { }
+      case START_GAME -> {
+        Game game = gameService.findById(principal.getGameId().getAsLong());
+        game.setGameStartedTime(ISOTimestamp.getISOTimestamp());
+
+        game.setCurrentRound(1);
+
+        gameService.save(game);
+
+        GameUpdatedPayload gameUpdatedPayload = new GameUpdatedPayload(game);
+        simpMessagingTemplate.convertAndSend("/topic/messages",
+            new Message(MessageType.GAME_UPDATED, gameUpdatedPayload));
+        // simpMessagingTemplate.convertAndSend("/topic/messages",
+        // new Message(MessageType.GAME_UPDATED, gameUpdatedPayload));
+      }
+
+      case START_ROUND -> {
+        Game game = gameService.findById(principal.getGameId().getAsLong());
+        // betra að búa til annan lista sem er copy svo röðin breytist ekki?
+        // ja holup
+
+        ArrayList<Long> sequence = new ArrayList<Long>(
+            game.getPlayerList().stream().map(p -> p.getId()).collect(Collectors.toList()));
+
+        logger.info(sequence.toString());
+
+        Collections.shuffle(sequence, new Random());
+        game.setPlayerSequence(sequence);
+
+        // Veljum fyrsta leikmann
+        int currentPlayerIdx = 0;
+        int currentGuesserIdx = (currentPlayerIdx + 1) % sequence.size();
+        game.setCurrentPlayerIdx(currentPlayerIdx);
+
+        long playerId = sequence.get(currentPlayerIdx);
+        long guesserId = sequence.get(currentGuesserIdx);
+        game.setCurrentPlayer(playerService.findById(playerId));
+        game.setCurrentGuesser(playerService.findById(guesserId));
+
+        // Stokkum spilum
+        ArrayList<Long> cardSequence = new ArrayList<Long>(
+            game.getCardGroup().getCards().stream().map(c -> c.getId()).collect(Collectors.toList()));
+        game.setCardSequence(cardSequence);
+
+        gameService.save(game);
+
+        GameUpdatedPayload gameUpdatedPayload = new GameUpdatedPayload(game);
+        simpMessagingTemplate.convertAndSend("/topic/messages",
+            new Message(MessageType.GAME_UPDATED, gameUpdatedPayload));
+      }
+      case START_TURN -> {
+        // Vista tíma sem turn byrjar
+        Game game = gameService.findById(principal.getGameId().getAsLong());
+
+        game.setTurnStartedTime(ISOTimestamp.getISOTimestamp());
+        game.setTurnInProgress(true);
+
+        ArrayList<Long> cardSequence = game.getCardSequence();
+        Collections.shuffle(cardSequence, new Random());
+        game.setCardSequence(cardSequence);
+
+        game.setCurrentCardIdx(0);
+
+        long currentCardIdx = cardSequence.get(0);
+        Card currentCard = cardService.findById(currentCardIdx);
+        game.setCurrentCard(currentCard);
+
+        gameService.save(game);
+
+        GameUpdatedPayload gameUpdatedPayload = new GameUpdatedPayload(game);
+        simpMessagingTemplate.convertAndSend("/topic/messages",
+            new Message(MessageType.GAME_UPDATED, gameUpdatedPayload));
+      }
+      case END_TURN -> {
+        Game game = gameService.findById(principal.getGameId().getAsLong());
+        turnOver(game);
+        gameService.save(game);
+
+        GameUpdatedPayload gameUpdatedPayload = new GameUpdatedPayload(game);
+        simpMessagingTemplate.convertAndSend("/topic/messages",
+            new Message(MessageType.GAME_UPDATED, gameUpdatedPayload));
+      }
+      case PUBLISH_CARDGROUP -> {
+        LinkedHashMap<String, Object> payload = (LinkedHashMap<String, Object>) m.payload;
+
+        Game game = gameService.findById(principal.getGameId().getAsLong());
+        game.getCardGroup().setPublished(true);
+
+        CardGroup cardGroup = game.getCardGroup();
+        cardGroup.setName((String) payload.get("name"));
+        cardGroup.setTags(new LinkedHashSet<String>((List<String>) payload.get("tags")));
+        cardGroup.setCreationDate(ISOTimestamp.getISOTimestamp());
+
+        UUID userId = UUID.fromString(principal.getName());
+        Player player = playerService.findByConnectionId(userId);
+
+        cardGroup.setCreator(player);
+        cardGroup.incrementTimesUsed();
+
+        gameService.save(game);
+
+        GameUpdatedPayload gameUpdatedPayload = new GameUpdatedPayload(game);
+        simpMessagingTemplate.convertAndSend("/topic/messages",
+            new Message(MessageType.GAME_UPDATED, gameUpdatedPayload));
+      }
+      case CORRECT -> {
+        Game game = gameService.findById(principal.getGameId().getAsLong());
+
+        game.getCurrentPlayer().addPoints(2);
+        game.getCurrentGuesser().addPoints(3);
+
+        int idx = game.getCurrentCardIdx();
+        game.getCardSequence().remove(idx);
+
+        if (idx >= game.getCardSequence().size()) {
+          turnOver(game);
+          gameService.save(game);
+
+          GameUpdatedPayload gameUpdatedPayload = new GameUpdatedPayload(game);
+          simpMessagingTemplate.convertAndSend("/topic/messages",
+              new Message(MessageType.GAME_UPDATED, gameUpdatedPayload));
+
+          return;
+        }
+
+        long id = game.getCardSequence().get(idx);
+        Card currentCard = cardService.findById(id);
+        game.setCurrentCard(currentCard);
+
+        gameService.save(game);
+
+        GameUpdatedPayload gameUpdatedPayload = new GameUpdatedPayload(game);
+        simpMessagingTemplate.convertAndSend("/topic/messages",
+            new Message(MessageType.GAME_UPDATED, gameUpdatedPayload));
+
+      }
+      case SKIP -> {
+        Game game = gameService.findById(principal.getGameId().getAsLong());
+
+        game.getCurrentPlayer().addPoints(-1);
+
+        int idx = game.getCurrentCardIdx() + 1;
+        if (idx >= game.getCardSequence().size()) {
+          turnOver(game);
+
+          gameService.save(game);
+
+          GameUpdatedPayload gameUpdatedPayload = new GameUpdatedPayload(game);
+          simpMessagingTemplate.convertAndSend("/topic/messages",
+              new Message(MessageType.GAME_UPDATED, gameUpdatedPayload));
+
+          return;
+        }
+
+        game.setCurrentCardIdx(idx);
+
+        long currentCardIdx = game.getCardSequence().get(idx);
+        Card currentCard = cardService.findById(currentCardIdx);
+        game.setCurrentCard(currentCard);
+
+        gameService.save(game);
+
+        GameUpdatedPayload gameUpdatedPayload = new GameUpdatedPayload(game);
+        simpMessagingTemplate.convertAndSend("/topic/messages",
+            new Message(MessageType.GAME_UPDATED, gameUpdatedPayload));
+      }
 
       default -> {
         logger.warn("Unhandled message: " + m.type.toString());

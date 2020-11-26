@@ -8,9 +8,17 @@ import { debug } from "./reducers/debug";
 import { user } from "./reducers/user";
 import { game } from "./reducers/game";
 import { errors } from "./reducers/errors";
+import { config } from "./reducers/config";
 import notificationMiddleware from "./notificationMiddleware";
 
-const rootReducer = combineReducers({ cardGroups, debug, user, game, errors });
+const rootReducer = combineReducers({
+  cardGroups,
+  debug,
+  user,
+  game,
+  errors,
+  config,
+});
 
 export const store = configureStore({
   reducer: rootReducer,
