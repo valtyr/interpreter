@@ -6,4 +6,4 @@ WORKDIR /app
 
 RUN mvn package
 
-CMD ["java", "-jar", "target/mariaskal-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "target/mariaskal-0.0.1-SNAPSHOT.jar", "--server.port=6969"]

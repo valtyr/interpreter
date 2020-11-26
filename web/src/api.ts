@@ -2,8 +2,8 @@ import axios from "axios";
 import { store } from "./store";
 import { ActionTypes } from "./store/actions";
 
-const CARD_GROUPS = "http://finndu.vin:8888/api/cardgroups";
-const ADD_CARD_GROUP = "http://finndu.vin:8888/api/addcardgroups";
+const CARD_GROUPS = "https://interpreter.finndu.vin/api/cardgroups";
+const ADD_CARD_GROUP = "https://interpreter.finndu.vin/api/addcardgroups";
 
 export const fetchCardGroups = async () => {
   store.dispatch({ type: ActionTypes.FetchCardGroups });
